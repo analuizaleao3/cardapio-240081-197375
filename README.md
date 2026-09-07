@@ -23,8 +23,6 @@ Retorna as pizzas disponíveis no catálogo do serviço.
 | `Content-Type` | Sim         | `application/json` |
 | `X-API-Key`    | Sim         | `turma2026`        |
 
-O header `x-pedido-id` não é utilizado neste endpoint, pois a consulta ao cardápio não está relacionada a um pedido específico.
-
 ### Requisição
 
 Não possui corpo.
@@ -118,8 +116,7 @@ Quando o Health estiver `true`:
 ```json
 {
   "code": 200,
-  "message": "Serviço disponível",
-  "health": true
+  "message": "Serviço disponível"
 }
 ```
 
@@ -130,16 +127,22 @@ Quando o Health estiver `false`:
 ```json
 {
   "code": 503,
-  "message": "Serviço indisponível",
-  "health": false
+  "message": "Serviço indisponível"
 }
 ```
 
-O código `503` permite que o consumidor identifique que o serviço está temporariamente indisponível e, quando aplicável, utilize o mecanismo de fallback previsto na arquitetura.
+### Possíveis erros
+
+| Código | Situação                            |
+| ------ | ----------------------------------- |
+| `400`  | Content-Type inválido               |
+| `401`  | X-API-Key não informado             |
+| `403`  | X-API-Key inválido                  |
+| `500`  | Erro interno do Serviço             |
 
 ---
 
-# 4. Atualização do Health
+## 3.2 Atualização do Health
 
 ### POST `/turmaa03/v1/health/atualizar`
 
@@ -173,17 +176,6 @@ Exemplo para desativar:
 
 ```
 
-### Validações
-
-O endpoint realiza as seguintes validações:
-
-* `Content-Type` deve ser `application/json`;
-* `X-API-Key` deve ser informado;
-* `X-API-Key` deve possuir o valor esperado;
-* o corpo da requisição deve ser informado;
-* o campo `health` deve existir;
-* o campo `health` deve ser do tipo booleano.
-
 ### Resposta — 200
 
 Ao ativar:
@@ -191,8 +183,7 @@ Ao ativar:
 ```json
 {
   "code": 200,
-  "message": "Health ativado com sucesso",
-  "health": true
+  "message": "Health ativado com sucesso"
 }
 ```
 
@@ -201,12 +192,9 @@ Ao desativar:
 ```json
 {
   "code": 200,
-  "message": "Health desativado com sucesso",
-  "health": false
+  "message": "Health desativado com sucesso"
 }
 ```
-
-O `200` representa que a operação de alteração do Health foi realizada com sucesso. Quando o valor é `false`, o serviço passa a responder `503` no endpoint de consulta do Health.
 
 ### Possíveis erros
 
@@ -218,11 +206,10 @@ O `200` representa que a operação de alteração do Health foi realizada com s
 | `401`  | X-API-Key não informado             |
 | `403`  | X-API-Key inválido                  |
 | `500`  | Erro interno                        |
-| `503`  | Falha ao acessar o Redis            |
 
 ---
 
-# 5. Resumo dos endpoints
+# 4. Resumo dos endpoints
 
 | Método | Endpoint                        | Função                       |
 | ------ | ------------------------------- | ---------------------------- |
