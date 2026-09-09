@@ -4,24 +4,26 @@
 
 O serviço de Cardápio é responsável por disponibilizar as pizzas cadastradas no sistema, juntamente com suas informações, como nome, descrição, ingredientes, preço e disponibilidade.
 
-O serviço faz parte da arquitetura distribuída do projeto **Pzaas (Pizza as a Service)** e disponibiliza sua API por meio do n8n.
+O serviço faz parte da arquitetura distribuída do projeto **Pzaas (Pizza as a Service)** realizado por meio do n8n. Todos os endpoints que serão apresentados precisam ser combinados com a url base (https://pzaas.online/webhook/ + endpoint). Exemplo: https://pzaas.online/webhook/turmaa03/v1/health
 
 ---
 
-# 2. Endpoints
+## 2. Menu
 
-## 2.1 Consulta do Cardápio
+### 2.1 Consulta do Cardápio
 
 ### GET `/turmaa03/v1/menu`
 
-Retorna as pizzas disponíveis no catálogo do serviço.
+Retorna as pizzas disponíveis para consumo no Cardápio.
+
+Uma pizza será retornada somente quando estiver disponível no cadastro do Cardápio e possuir todos os ingredientes necessários em quantidade suficiente.
 
 ### Headers
 
-| Header         | Obrigatório | Valor              |
-| -------------- | ----------- | ------------------ |
-| `Content-Type` | Sim         | `application/json` |
-| `X-API-Key`    | Sim         | `turma2026`        |
+| **Header**     | **Obrigatório** | **Valor**          |
+| -------------- | --------------- | ------------------ |
+| `Content-Type` | Sim             | `application/json` |
+| `X-API-Key`    | Sim             | `turma2026`        |
 
 ### Requisição
 
@@ -29,7 +31,7 @@ Não possui corpo.
 
 Exemplo:
 
-```http
+```text
 GET /turmaa03/v1/menu
 Content-Type: application/json
 X-API-Key: turma2026
@@ -37,7 +39,9 @@ X-API-Key: turma2026
 
 ### Resposta — 200
 
-Exemplo:
+Quando houver pizzas disponíveis, o serviço retorna a lista de pizzas e suas respectivas informações.
+
+Exemplo de resposta real:
 
 ```json
 [
@@ -45,58 +49,114 @@ Exemplo:
     "id": 1,
     "nome": "Pizza de Mussarela",
     "descricao": "Pizza com molho de tomate, mussarela, tomate, orégano e azeitona.",
-    "ingredientes": [
-      "molho de tomate",
-      "mussarela",
-      "tomate",
-      "orégano",
-      "azeitona"
-    ],
-    "preco": 0,
+    "preco": "60.00",
     "emPromocao": false,
     "precoPromocional": null,
-    "disponivel": true
+    "disponivel": true,
+    "ingredientes": [
+      {
+        "nome": "molho de tomate",
+        "quantidade": 0.1,
+        "unidade": "kg"
+      },
+      {
+        "nome": "mussarela",
+        "quantidade": 0.3,
+        "unidade": "kg"
+      },
+      {
+        "nome": "tomate",
+        "quantidade": 0.1,
+        "unidade": "kg"
+      },
+      {
+        "nome": "orégano",
+        "quantidade": 0.005,
+        "unidade": "kg"
+      },
+      {
+        "nome": "azeitona",
+        "quantidade": 0.05,
+        "unidade": "kg"
+      }
+    ]
   },
   {
     "id": 2,
     "nome": "Pizza de Calabresa Acebolada",
     "descricao": "Pizza com molho de tomate, calabresa, cebola roxa, orégano e azeitona.",
-    "ingredientes": [
-      "molho de tomate",
-      "calabresa",
-      "cebola roxa",
-      "orégano",
-      "azeitona"
-    ],
-    "preco": 0,
+    "preco": "70.00",
     "emPromocao": false,
     "precoPromocional": null,
-    "disponivel": true
+    "disponivel": true,
+    "ingredientes": [
+      {
+        "nome": "molho de tomate",
+        "quantidade": 0.1,
+        "unidade": "kg"
+      },
+      {
+        "nome": "orégano",
+        "quantidade": 0.005,
+        "unidade": "kg"
+      },
+      {
+        "nome": "azeitona",
+        "quantidade": 0.05,
+        "unidade": "kg"
+      },
+      {
+        "nome": "calabresa",
+        "quantidade": 0.3,
+        "unidade": "kg"
+      },
+      {
+        "nome": "cebola roxa",
+        "quantidade": 0.1,
+        "unidade": "kg"
+      }
+    ]
   }
 ]
 ```
 
-> Os valores de preço estão definidos como `0` enquanto não houver uma definição de preços no projeto.
+### Resposta — 200 sem pizzas disponíveis
+
+Caso o serviço esteja disponível, mas nenhuma pizza possua ingredientes suficientes para ser preparada, será retornada a seguinte resposta:
+
+```json
+{
+  "code": 200,
+  "message": "Não há pizzas disponíveis no momento.",
+  "pizzas": []
+}
+```
+
+Essa situação não representa uma falha do serviço. Por isso, o código retornado é `200`.
 
 ### Possíveis erros
 
-| Código | Situação                                                  |
-| ------ | --------------------------------------------------------- |
-| `400`  | `Content-Type` ausente ou diferente de `application/json` |
-| `401`  | `X-API-Key` ausente                                       |
-| `403`  | `X-API-Key` inválida                                      |
-| `500`  | Erro interno durante o processamento                      |
-| `503`  | Serviço ou recurso necessário para consulta indisponível  |
+| **Código** | **Situação**                                              |
+| ---------- | --------------------------------------------------------- |
+| `400`      | `Content-Type` ausente ou diferente de `application/json` |
+| `401`      | `X-API-Key` ausente                                       |
+| `403`      | `X-API-Key` inválida                                      |
+| `500`      | Erro interno durante o processamento                      |
+| `503`      | Serviço ou recurso necessário para consulta indisponível  |
+
+### Observação
+
+Quando houver indisponibilidade temporária de um recurso necessário para a consulta, o serviço poderá utilizar informações previamente disponíveis para manter o atendimento. Caso não seja possível realizar a consulta, será retornado o código `503`.
 
 ---
 
-# 3. Health
+## 3. Health
 
 O serviço possui um mecanismo próprio de Health para informar se o Cardápio está disponível para consumo.
 
 ---
 
-## 3.1 Consultar Health
+### 3.1 Consultar Health
 
 ### GET `/turmaa03/v1/health`
 
@@ -142,7 +202,7 @@ Quando o Health estiver `false`:
 
 ---
 
-## 3.2 Atualização do Health
+### 3.2 Atualização do Health
 
 ### POST `/turmaa03/v1/health/atualizar`
 
@@ -209,7 +269,7 @@ Ao desativar:
 
 ---
 
-# 4. Resumo dos endpoints
+## 4. Resumo dos endpoints
 
 | Método | Endpoint                        | Função                       |
 | ------ | ------------------------------- | ---------------------------- |
