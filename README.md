@@ -4,7 +4,11 @@
 
 O serviço de Cardápio é responsável por disponibilizar as pizzas cadastradas no sistema, juntamente com suas informações, como nome, descrição, ingredientes, preço e disponibilidade.
 
-O serviço faz parte da arquitetura distribuída do projeto **Pzaas (Pizza as a Service)** realizado por meio do n8n. Todos os endpoints que serão apresentados precisam ser combinados com a url base (https://pzaas.online/webhook/ + endpoint). Exemplo: https://pzaas.online/webhook/turmaa03/v1/health
+O serviço faz parte da arquitetura distribuída do projeto **Pzaas (Pizza as a Service)** realizado por meio do n8n.
+
+### URL Base
+
+`https://pzaas.online/webhook`
 
 ---
 
@@ -16,7 +20,7 @@ O serviço faz parte da arquitetura distribuída do projeto **Pzaas (Pizza as a 
 
 Retorna as pizzas disponíveis para consumo no Cardápio.
 
-Uma pizza será retornada somente quando estiver disponível no cadastro do Cardápio e possuir todos os ingredientes necessários em quantidade suficiente.
+Uma pizza será retornada somente quando estiver disponível no cadastro do Cardápio e todos os seus ingredientes estiverem cadastrados no Estoque em quantidade suficiente.
 
 ### Headers
 
@@ -32,7 +36,7 @@ Não possui corpo.
 Exemplo:
 
 ```text
-GET /turmaa03/v1/menu
+GET https://pzaas.online/webhook/turmaa03/v1/menu
 Content-Type: application/json
 X-API-Key: turma2026
 ```
@@ -45,78 +49,83 @@ Exemplo de resposta real:
 
 ```json
 [
-  {
-    "id": 1,
-    "nome": "Pizza de Mussarela",
-    "descricao": "Pizza com molho de tomate, mussarela, tomate, orégano e azeitona.",
-    "preco": "60.00",
-    "emPromocao": false,
-    "precoPromocional": null,
-    "disponivel": true,
-    "ingredientes": [
-      {
-        "nome": "molho de tomate",
-        "quantidade": 0.1,
-        "unidade": "kg"
-      },
-      {
-        "nome": "mussarela",
-        "quantidade": 0.3,
-        "unidade": "kg"
-      },
-      {
-        "nome": "tomate",
-        "quantidade": 0.1,
-        "unidade": "kg"
-      },
-      {
-        "nome": "orégano",
-        "quantidade": 0.005,
-        "unidade": "kg"
-      },
-      {
-        "nome": "azeitona",
-        "quantidade": 0.05,
-        "unidade": "kg"
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "nome": "Pizza de Calabresa Acebolada",
-    "descricao": "Pizza com molho de tomate, calabresa, cebola roxa, orégano e azeitona.",
-    "preco": "70.00",
-    "emPromocao": false,
-    "precoPromocional": null,
-    "disponivel": true,
-    "ingredientes": [
-      {
-        "nome": "molho de tomate",
-        "quantidade": 0.1,
-        "unidade": "kg"
-      },
-      {
-        "nome": "orégano",
-        "quantidade": 0.005,
-        "unidade": "kg"
-      },
-      {
-        "nome": "azeitona",
-        "quantidade": 0.05,
-        "unidade": "kg"
-      },
-      {
-        "nome": "calabresa",
-        "quantidade": 0.3,
-        "unidade": "kg"
-      },
-      {
-        "nome": "cebola roxa",
-        "quantidade": 0.1,
-        "unidade": "kg"
-      }
-    ]
-  }
+    {
+        "code": 200,
+        "pizzas": [
+            {
+                "id": 1,
+                "nome": "Pizza de Mussarela",
+                "descricao": "Pizza com molho de tomate, mussarela, tomate, orégano e azeitona.",
+                "preco": "60.00",
+                "emPromocao": false,
+                "precoPromocional": null,
+                "disponivel": true,
+                "ingredientes": [
+                    {
+                        "nome": "molho de tomate",
+                        "quantidade": 0.1,
+                        "unidade": "L"
+                    },
+                    {
+                        "nome": "mussarela",
+                        "quantidade": 0.3,
+                        "unidade": "kg"
+                    },
+                    {
+                        "nome": "tomate",
+                        "quantidade": 0.1,
+                        "unidade": "kg"
+                    },
+                    {
+                        "nome": "orégano",
+                        "quantidade": 0.005,
+                        "unidade": "kg"
+                    },
+                    {
+                        "nome": "azeitona",
+                        "quantidade": 0.05,
+                        "unidade": "kg"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "nome": "Pizza de Calabresa Acebolada",
+                "descricao": "Pizza com molho de tomate, calabresa, cebola roxa, orégano e azeitona.",
+                "preco": "70.00",
+                "emPromocao": false,
+                "precoPromocional": null,
+                "disponivel": true,
+                "ingredientes": [
+                    {
+                        "nome": "molho de tomate",
+                        "quantidade": 0.1,
+                        "unidade": "L"
+                    },
+                    {
+                        "nome": "orégano",
+                        "quantidade": 0.005,
+                        "unidade": "kg"
+                    },
+                    {
+                        "nome": "azeitona",
+                        "quantidade": 0.05,
+                        "unidade": "kg"
+                    },
+                    {
+                        "nome": "calabresa",
+                        "quantidade": 0.3,
+                        "unidade": "kg"
+                    },
+                    {
+                        "nome": "cebola roxa",
+                        "quantidade": 0.1,
+                        "unidade": "kg"
+                    }
+                ]
+            }
+        ]
+    }
 ]
 ```
 
@@ -144,10 +153,6 @@ Essa situação não representa uma falha do serviço. Por isso, o código retor
 | `500`      | Erro interno durante o processamento                      |
 | `503`      | Serviço ou recurso necessário para consulta indisponível  |
 
-### Observação
-
-Quando houver indisponibilidade temporária de um recurso necessário para a consulta, o serviço poderá utilizar informações previamente disponíveis para manter o atendimento. Caso não seja possível realizar a consulta, será retornado o código `503`.
-
 ---
 
 ## 3. Health
@@ -168,6 +173,14 @@ Consulta o estado atual do serviço.
 | -------------- | ----------- | ------------------ |
 | `Content-Type` | Sim         | `application/json` |
 | `X-API-Key`    | Sim         | `turma2026`        |
+
+Exemplo:
+
+```text
+GET https://pzaas.online/webhook/turmaa03/v1/health
+Content-Type: application/json
+X-API-Key: turma2026
+```
 
 ### Resposta — Serviço disponível
 
