@@ -1,0 +1,1775 @@
+{
+  "name": "CARDAPIO-240081-197375",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "turmaa03/v1/menu",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -416,
+        3440
+      ],
+      "id": "df6f53cf-723e-4fa8-a8bf-74c14d75fbb5",
+      "name": "wh_menu",
+      "webhookId": "d9628938-439f-4915-b507-f1c1f02cfbaf",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const headers = $json.headers;\n\nif (headers['content-type'] !== 'application/json') {\n    return [{\n        json: {\n            status: 400,\n            erro: 'Content-Type deve ser application/json'\n        }\n    }];\n}\n\nif (!headers['x-api-key']) {\n    return [{\n        json: {\n            status: 401,\n            erro: 'x-api-key não informado'\n        }\n    }];\n}\n\nif (headers['x-api-key'] !== 'turma2026') {\n    return [{\n        json: {\n            status: 403,\n            erro: 'x-api-key inválido'\n        }\n    }];\n}\n\n// Tudo correto\nreturn [{\n    json: {\n        $json,\n        status: 200\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -208,
+        3440
+      ],
+      "id": "a60e2f9c-5b5e-4628-a18e-56ebd37d84dc",
+      "name": "c_menu_validacoes",
+      "disabled": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"code\": {{ $json.status }},\n  \"message\": \"{{ $json.erro }}\"\n}",
+        "options": {
+          "responseCode": "={{ $json.status }}"
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        240,
+        3760
+      ],
+      "id": "997b88dd-b4d3-4cba-8313-9a75ef9f5218",
+      "name": "rwh_menu_erro_header",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const headers = $json.headers;\n\nif (headers['content-type'] !== 'application/json') {\n    return [{\n        json: {\n            status: 400,\n            erro: 'Content-Type deve ser application/json'\n        }\n    }];\n}\n\nif (!headers['x-api-key']) {\n    return [{\n        json: {\n            status: 401,\n            erro: 'x-api-key não informado'\n        }\n    }];\n}\n\nif (headers['x-api-key'] !== 'turma2026') {\n    return [{\n        json: {\n            status: 403,\n            erro: 'x-api-key inválido'\n        }\n    }];\n}\n\nreturn [{\n    json: {\n        $json,\n        status: 200\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        928
+      ],
+      "id": "f5ae0b57-0729-4d53-ac1a-8b492edfdfc4",
+      "name": "c_health_validacoes",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"code\": {{ $json.status }},\n  \"message\": \"{{ $json.erro }}\"\n}",
+        "options": {
+          "responseCode": "={{ $json.status }}"
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        384,
+        1264
+      ],
+      "id": "48b4b091-7402-407e-be0d-1104b7244410",
+      "name": "rwh_health_erro_header"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d2bfc1a2-895a-4ecc-a08e-86668f20fc5f",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        144,
+        928
+      ],
+      "id": "8bb347e1-a013-4f78-bd90-e821c386f663",
+      "name": "if_health_status_200"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d2bfc1a2-895a-4ecc-a08e-86668f20fc5f",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        16,
+        3440
+      ],
+      "id": "59319a92-d1db-461f-afb5-8d08eec9b731",
+      "name": "If_menu_status_200",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "health_turmaa03",
+        "key": "health_turmaa03",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        384,
+        928
+      ],
+      "id": "27f042f4-b40f-4b5f-b4e9-a50e3e223c97",
+      "name": "r_health",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 500,
+      "credentials": {
+        "redis": {
+          "id": "XznCXy6kVOlb885y",
+          "name": "CARDAPIO-240081-197375"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "path": "turmaa03/v1/health",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -304,
+        928
+      ],
+      "id": "a2819620-89f5-4ae8-a71f-937282d5d657",
+      "name": "wh_health",
+      "webhookId": "b32355ca-eb0b-4ef9-add4-5956fcf62f0e"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "turmaa03/v1/health/atualizar",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -304,
+        64
+      ],
+      "id": "5f852048-5a5e-4a12-84b5-c6d979dcb602",
+      "name": "wh_health_post",
+      "webhookId": "e4a15c2d-e67b-4545-9702-9c4448abd7ef"
+    },
+    {
+      "parameters": {
+        "jsCode": "const headers = $json.headers;\nconst body = $json.body;\n\n\nif (headers['content-type'] !== 'application/json') {\n    return [{\n        json: {\n            status: 400,\n            erro: 'Content-Type deve ser application/json'\n        }\n    }];\n}\n\nif (!headers['x-api-key']) {\n    return [{\n        json: {\n            status: 401,\n            erro: 'x-api-key não informado'\n        }\n    }];\n}\n\nif (headers['x-api-key'] !== 'turma2026') {\n    return [{\n        json: {\n            status: 403,\n            erro: 'x-api-key inválido'\n        }\n    }];\n}\n\nif (body === undefined || body.health === undefined) {\n    return [{\n        json: {\n            status: 400,\n            erro: 'Campo health não informado'\n        }\n    }];\n}\n\nif (typeof body.health !== 'boolean') {\n    return [{\n        json: {\n            status: 400,\n            erro: 'O campo health deve ser booleano'\n        }\n    }];\n}\n\nreturn [{\n    json: {\n        status: 200,\n        health: body.health\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        64
+      ],
+      "id": "d6ec8148-f297-47c2-aa57-0494c12991e2",
+      "name": "c_health_post_validacoes",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "health_turmaa03",
+        "value": "={{ $json.health }}",
+        "keyType": "string"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        368,
+        64
+      ],
+      "id": "b6485638-e419-4589-88f5-592d345da20f",
+      "name": "r_health_post",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 500,
+      "credentials": {
+        "redis": {
+          "id": "XznCXy6kVOlb885y",
+          "name": "CARDAPIO-240081-197375"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d2bfc1a2-895a-4ecc-a08e-86668f20fc5f",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        144,
+        64
+      ],
+      "id": "b97c1c28-dd46-4533-84ad-13511329cf5c",
+      "name": "if_health_post_status_200"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"code\": {{ $json.status }},\n  \"message\": \"{{ $json.erro }}\"\n}",
+        "options": {
+          "responseCode": "={{ $json.status }}"
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        384,
+        544
+      ],
+      "id": "5db114f7-480e-406f-a353-782965f972e9",
+      "name": "rwh_health_post_erro_header"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"code\": 500,\n  \"message\": \"Erro interno do serviço\"\n}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        144,
+        1424
+      ],
+      "id": "aab027ac-6ec9-40d7-9371-df39f205454e",
+      "name": "rwh_health_erro_validacoes"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"code\": 500,\n  \"message\": \"Erro interno do serviço\"\n}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        144,
+        704
+      ],
+      "id": "857e14fc-7fb7-47f5-9432-580fd5d260ef",
+      "name": "rwh_health_post_erro_validacoes"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"code\": 500,\n  \"message\": \"Erro Interno do Serviço\"\n}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        608,
+        1104
+      ],
+      "id": "fae37b3e-4108-4ec2-a8cf-0b4b408d3d9f",
+      "name": "rwh_health_erro_redis"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"code\": 500,\n  \"message\": \"Erro interno do serviço\"\n}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        592,
+        400
+      ],
+      "id": "31d376ce-c3fe-4d46-b76e-33602c7b482a",
+      "name": "rwh_health_post_erro_redis"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"code\": 500,\n  \"message\": \"Erro interno do serviço\"\n}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        16,
+        3920
+      ],
+      "id": "bfd7782e-d1c2-4f61-ac99-455502f005af",
+      "name": "rwh_menu_erro_validacoes",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "Link Documentação\n\nhttps://github.com/analuizaleao3/cardapio-240081-197375/blob/main/README.md"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -384,
+        304
+      ],
+      "id": "8e761997-8cc0-4c8a-8a85-72d40f28192b",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6c9a46fd-e7be-416c-a633-624a8e800e64",
+              "leftValue": "={{ $json.health }}",
+              "rightValue": "=true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        592,
+        64
+      ],
+      "id": "d5ff0fa0-daff-4c9a-be2e-ac70b4579cc2",
+      "name": "If_health_post_true"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "health_recovery_turmaa03",
+        "value": "true",
+        "expire": true,
+        "ttl": 300
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        832,
+        240
+      ],
+      "id": "aea11f34-1bb0-46c6-bba5-8a0b0aa0cf3b",
+      "name": "r_health_post_recovery",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 500,
+      "credentials": {
+        "redis": {
+          "id": "XznCXy6kVOlb885y",
+          "name": "CARDAPIO-240081-197375"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"code\": 200,\n  \"message\": \"Health ativado com sucesso\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        832,
+        64
+      ],
+      "id": "383dcbcd-afcf-47f7-bd53-fd88e4b9a69a",
+      "name": "rwh_health_post_true"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"code\": 200,\n  \"message\": \"Health desativado com sucesso\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1136,
+        240
+      ],
+      "id": "b9a40f4d-972f-40e2-84bb-c35d9748eb59",
+      "name": "rwh_health_post_false"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"code\": 500,\n  \"message\": \"Erro interno do serviço\"\n}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1136,
+        400
+      ],
+      "id": "9cb14bb8-6b8a-49ec-9c5e-b3761d6b2215",
+      "name": "rwh_health_post_erro_recovery"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "health_turmaa03",
+        "key": "health_turmaa03",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        -80,
+        -160
+      ],
+      "id": "de25760f-ca09-4412-adbd-668695b3f9c7",
+      "name": "r_st_health",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 500,
+      "credentials": {
+        "redis": {
+          "id": "XznCXy6kVOlb885y",
+          "name": "CARDAPIO-240081-197375"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -304,
+        -160
+      ],
+      "id": "0a141d9a-3951-4ec5-b41a-91a66b1a6171",
+      "name": "st_health_recovery"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6dd3d455-de61-4675-915d-6b6807615fd8",
+              "leftValue": "={{ $json.health_turmaa03 }}",
+              "rightValue": "false",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        144,
+        -160
+      ],
+      "id": "8a61c83c-bbf3-459f-90aa-6e0ac6fb53c6",
+      "name": "if_st_health_true"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "propertyName": "health_recovery_turmaa03",
+        "key": "health_recovery_turmaa03",
+        "keyType": "string",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        368,
+        -160
+      ],
+      "id": "b2d88107-7581-4e13-9ef8-489e3d2e58f2",
+      "name": "r_st_health_recovery",
+      "credentials": {
+        "redis": {
+          "id": "XznCXy6kVOlb885y",
+          "name": "CARDAPIO-240081-197375"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "56f84114-f4a7-4ace-b768-83f4d6d4204e",
+              "leftValue": "={{ $json.health_recovery_turmaa03 }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        592,
+        -160
+      ],
+      "id": "1b517dd1-efe0-42a3-b077-4204ca56875d",
+      "name": "if_st_health_recovery_empty"
+    },
+    {
+      "parameters": {
+        "operation": "set",
+        "key": "health_turmaa03",
+        "value": "true"
+      },
+      "type": "n8n-nodes-base.redis",
+      "typeVersion": 1,
+      "position": [
+        832,
+        -160
+      ],
+      "id": "0007468e-87ad-46c7-95cb-cec90f3d9f0b",
+      "name": "r_st_health_true",
+      "credentials": {
+        "redis": {
+          "id": "XznCXy6kVOlb885y",
+          "name": "CARDAPIO-240081-197375"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"code\": 200,\n  \"message\": \"Serviço Disponível\"\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        896,
+        928
+      ],
+      "id": "ee474f21-90a9-4521-87d7-a05844720a05",
+      "name": "rwh_health_true"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"code\": 503,\n  \"message\": \"Serviço Indisponível\"\n} ",
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        896,
+        1104
+      ],
+      "id": "62f11af9-0805-4bf7-b18d-bb88abeded56",
+      "name": "rwh_health_false"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d238c843-6149-421c-b34b-edc81609828d",
+              "leftValue": "={{ $json.health_turmaa03 }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        608,
+        928
+      ],
+      "id": "1f0bd2a8-6f0b-422a-b70f-bd767b7d333f",
+      "name": "if_health_true"
+    },
+    {
+      "parameters": {
+        "jsCode": "const estoque = $input.first().json;\n\nreturn Object.entries(estoque).map(([nome, dados]) => ({\n    json: {\n        ingrediente_nome: nome,\n        quantidade: dados.quantidade,\n        unidade: dados.unidade,\n        categoria: dados.categoria || null\n    }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        688,
+        3440
+      ],
+      "id": "2939ef3f-b5d8-4cad-adce-c24c0fd370c2",
+      "name": "c_menu_modelar_retorno_estoque",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "INSERT INTO turmaa03_cardapio_estoque_cache (\n    ingrediente_nome,\n    quantidade,\n    unidade,\n    categoria,\n    atualizado_em\n)\nVALUES (\n    $1,\n    $2,\n    $3,\n    $4,\n    CURRENT_TIMESTAMP\n)\nON CONFLICT (ingrediente_nome)\nDO UPDATE SET\n    quantidade = EXCLUDED.quantidade,\n    unidade = EXCLUDED.unidade,\n    categoria = EXCLUDED.categoria,\n    atualizado_em = CURRENT_TIMESTAMP;",
+        "options": {
+          "queryReplacement": "={{ $json.ingrediente_nome }}, {{ $json.quantidade }}, {{ $json.unidade }}, {{ $json.categoria }}"
+        }
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        912,
+        3440
+      ],
+      "id": "2c0389f9-97c6-4e13-9316-4f1e1a776268",
+      "name": "pg_menu_salvar_cache",
+      "credentials": {
+        "postgres": {
+          "id": "pHxruZSRovzxdzmO",
+          "name": "Postgres account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "url": "https://pzaas.online/webhook/v1/estoque240209240286",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            },
+            {
+              "name": "Content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        464,
+        3440
+      ],
+      "id": "154a2f7f-411d-4ea6-ac32-62a3de8f0bdd",
+      "name": "http_menu_estoque",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 500,
+      "executeOnce": true,
+      "disabled": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    p.id,\n    p.nome,\n    p.descricao,\n    p.preco,\n    p.em_promocao AS \"emPromocao\",\n    p.preco_promocional AS \"precoPromocional\",\n    p.disponivel,\n    json_agg(\n        json_build_object(\n            'nome', i.nome,\n            'quantidade', pi.quantidade,\n            'unidade', i.unidade\n        )\n        ORDER BY i.id\n    ) AS ingredientes\nFROM turmaa03_cardapio_pizza p\nINNER JOIN turmaa03_cardapio_pizza_ingrediente pi\n    ON pi.pizza_id = p.id\nINNER JOIN turmaa03_cardapio_ingrediente i\n    ON i.id = pi.ingrediente_id\nWHERE p.disponivel = TRUE\nGROUP BY\n    p.id,\n    p.nome,\n    p.descricao,\n    p.preco,\n    p.em_promocao,\n    p.preco_promocional,\n    p.disponivel\nORDER BY p.id;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        240,
+        3440
+      ],
+      "id": "c7e0bffc-62fc-4d2d-af6f-a091f4a12673",
+      "name": "pg_menu_buscar_pizza",
+      "credentials": {
+        "postgres": {
+          "id": "pHxruZSRovzxdzmO",
+          "name": "Postgres account 2"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// Dados retornados pelo PostgreSQL\nconst pizzas = $('pg_menu_buscar_pizza').all();\n\n// Dados retornados pelo Estoque\nconst estoque = $input.first().json;\n\n// Verifica cada pizza\nconst pizzasDisponiveis = pizzas\n    .map(item => item.json)\n    .filter(pizza => {\n\n        // A pizza precisa estar ativa no Cardápio\n        if (pizza.disponivel !== true) {\n            return false;\n        }\n\n        // Todos os ingredientes precisam existir\n        // em quantidade suficiente no estoque\n        return pizza.ingredientes.every(ingrediente => {\n\n            const estoqueIngrediente = estoque[ingrediente.nome];\n\n            if (!estoqueIngrediente) {\n                return false;\n            }\n\n            return (\n                estoqueIngrediente.unidade === ingrediente.unidade &&\n                estoqueIngrediente.quantidade >= ingrediente.quantidade\n            );\n        });\n    });\n\nif (pizzasDisponiveis.length === 0) {\n    return [\n        {\n            json: {\n                code: 200,\n                message: \"Não há pizzas disponíveis no momento.\",\n                pizzas: []\n            }\n        }\n    ];\n}\n\nreturn pizzasDisponiveis.map(pizza => ({\n    json: {\n      code: 200,\n      pizzas: pizza\n    }\n}));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1408,
+        3552
+      ],
+      "id": "3dda1cee-e72c-436c-824b-c8e92ce05046",
+      "name": "c_menu_formatar_cardapio",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1680,
+        3552
+      ],
+      "id": "45c4cd43-814d-4cfe-8b37-aead509a8329",
+      "name": "rwh_menu",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    ingrediente_nome,\n    quantidade,\n    unidade,\n    categoria,\n    atualizado_em\nFROM turmaa03_cardapio_estoque_cache\nWHERE atualizado_em >= CURRENT_TIMESTAMP - INTERVAL '30 minutes'\nORDER BY ingrediente_nome;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        688,
+        3648
+      ],
+      "id": "311044d1-b095-4e5e-a525-ed1509718e81",
+      "name": "pg_menu_buscar_cache",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 500,
+      "credentials": {
+        "postgres": {
+          "id": "pHxruZSRovzxdzmO",
+          "name": "Postgres account 2"
+        }
+      },
+      "disabled": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "6e5bf2af-882c-444e-a30b-839c3ea5eb83",
+              "leftValue": "={{ $input.all().length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        912,
+        3648
+      ],
+      "id": "621cbb47-8f94-4852-a499-e96b9b231e6e",
+      "name": "if_menu_cache_valido",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const itens = $input.all();\n\nconst estoque = {};\n\nfor (const item of itens) {\n    const dados = item.json;\n\n    estoque[dados.ingrediente_nome] = {\n        quantidade: Number(dados.quantidade),\n        unidade: dados.unidade,\n        categoria: dados.categoria || \"\"\n    };\n}\n\nreturn [\n    {\n        json: estoque\n    }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1136,
+        3648
+      ],
+      "id": "dec8e95a-876b-4216-8f31-b0970dea7fa0",
+      "name": "c_menu_modelar_cache",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"code\": 503,\n  \"message\": \"Serviço indisponível\"\n}",
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1136,
+        3856
+      ],
+      "id": "ebfecbd0-701a-4836-955d-57e5986f1f12",
+      "name": "rwh_menu_erro_servico",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "return $('http_menu_estoque').all();\n\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1136,
+        3440
+      ],
+      "id": "212670db-c36d-49db-9ce7-b7fdb32e4f9b",
+      "name": "c_menu_retornar_ingredientes",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "jsCode": "const headers = $json.headers;\n\nif (headers['content-type'] !== 'application/json') {\n    return [{\n        json: {\n            status: 400,\n            erro: 'Content-Type deve ser application/json'\n        }\n    }];\n}\n\nif (!headers['x-api-key']) {\n    return [{\n        json: {\n            status: 401,\n            erro: 'x-api-key não informado'\n        }\n    }];\n}\n\nif (headers['x-api-key'] !== 'turma2026') {\n    return [{\n        json: {\n            status: 403,\n            erro: 'x-api-key inválido'\n        }\n    }];\n}\n\nreturn [{\n    json: {\n        $json,\n        status: 200\n    }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        1680
+      ],
+      "id": "3b9eee0a-83f7-4a4b-9b51-73b821e2c7c4",
+      "name": "c_menu_validacoes1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"code\": {{ $json.status }},\n  \"message\": \"{{ $json.erro }}\"\n}",
+        "options": {
+          "responseCode": "={{ $json.status }}"
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        336,
+        2000
+      ],
+      "id": "bdc2b2e3-4ef5-4dec-b3ec-68663e410687",
+      "name": "rwh_menu_erro_header1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d2bfc1a2-895a-4ecc-a08e-86668f20fc5f",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": 200,
+              "operator": {
+                "type": "number",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        112,
+        1680
+      ],
+      "id": "bb634b8c-19a0-4f6c-b17f-638a7aee85c7",
+      "name": "If_menu_status_"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"code\": 500,\n  \"message\": \"Erro interno do serviço\"\n}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        112,
+        2160
+      ],
+      "id": "1089fc85-7e30-4f43-95a3-80475959e3ec",
+      "name": "rwh_menu_erro_validacoes1"
+    },
+    {
+      "parameters": {
+        "url": "https://pzaas.online/webhook/v1/estoque240209240286",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            },
+            {
+              "name": "Content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        560,
+        1680
+      ],
+      "id": "bd6d9350-8eaa-4a9a-8ea0-e81ffb315b8f",
+      "name": "http_menu_estoque1",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 500,
+      "executeOnce": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n    p.id,\n    p.nome,\n    p.descricao,\n    p.preco,\n    p.em_promocao AS \"emPromocao\",\n    p.preco_promocional AS \"precoPromocional\",\n    p.disponivel,\n    json_agg(\n        json_build_object(\n            'nome', i.nome,\n            'quantidade', pi.quantidade,\n            'unidade', i.unidade\n        )\n        ORDER BY i.id\n    ) AS ingredientes\nFROM turmaa03_cardapio_pizza p\nINNER JOIN turmaa03_cardapio_pizza_ingrediente pi\n    ON pi.pizza_id = p.id\nINNER JOIN turmaa03_cardapio_ingrediente i\n    ON i.id = pi.ingrediente_id\nWHERE p.disponivel = TRUE\nGROUP BY\n    p.id,\n    p.nome,\n    p.descricao,\n    p.preco,\n    p.em_promocao,\n    p.preco_promocional,\n    p.disponivel\nORDER BY p.id;",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.7,
+      "position": [
+        336,
+        1680
+      ],
+      "id": "b2e98c5f-f649-4830-a2f1-7d865127267f",
+      "name": "pg_menu_buscar_pizza1",
+      "credentials": {
+        "postgres": {
+          "id": "pHxruZSRovzxdzmO",
+          "name": "Postgres account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const pizzas = $('pg_menu_buscar_pizza1').all();\n\nconst estoque = $input.first().json;\n\nconst pizzasDisponiveis = pizzas\n    .map(item => item.json)\n    .filter(pizza => {\n\n        if (pizza.disponivel !== true) {\n            return false;\n        }\n\n        return pizza.ingredientes.every(ingrediente => {\n\n            const estoqueIngrediente = estoque[ingrediente.nome];\n\n            if (!estoqueIngrediente) {\n                return false;\n            }\n\n            return (\n                estoqueIngrediente.quantidade >= ingrediente.quantidade\n            );\n        });\n    });\n\nif (pizzasDisponiveis.length === 0) {\n    return [\n        {\n            json: {\n                code: 200,\n                message: \"Não há pizzas disponíveis no momento.\",\n                pizzas: []\n            }\n        }\n    ];\n}\n\nreturn [\n    {\n        json: {\n            code: 200,\n            pizzas: pizzasDisponiveis\n        }\n    }\n];;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1376,
+        1680
+      ],
+      "id": "dc39f77d-274a-46e3-a770-860e2cce4c3d",
+      "name": "c_menu_formatar_cardapio1",
+      "retryOnFail": false,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1696,
+        1680
+      ],
+      "id": "25c377eb-95e8-4964-a146-afbfec764233",
+      "name": "rwh_menu1"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"code\": 503,\n  \"message\": \"Serviço indisponível\"\n}",
+        "options": {
+          "responseCode": 503
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1136,
+        2080
+      ],
+      "id": "fe0722fb-09bd-4c6a-a7e7-77e81393dd3b",
+      "name": "rwh_menu_erro_servico1"
+    },
+    {
+      "parameters": {
+        "path": "turmaa03/v1/menu",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -320,
+        1680
+      ],
+      "id": "feee2a6d-49d3-4887-8be3-729073eabced",
+      "name": "wh_menu1",
+      "webhookId": "d9628938-439f-4915-b507-f1c1f02cfbaf"
+    },
+    {
+      "parameters": {
+        "url": "https://pzaas.online/webhook/estoque-239853-240503/v1/estoque",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "turma2026"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.5,
+      "position": [
+        800,
+        1872
+      ],
+      "id": "d0550485-b598-4589-8025-b8e7b910ee1f",
+      "name": "http_menu_estoque2",
+      "retryOnFail": true,
+      "maxTries": 2,
+      "waitBetweenTries": 500,
+      "executeOnce": true,
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const itens = $input.all();\n\nconst estoque = {};\n\nfor (const item of itens) {\n    const insumos = item.json.insumos || [];\n\n    for (const insumo of insumos) {\n        estoque[insumo.nome.toLowerCase()] = {\n            quantidade: Number(insumo.quantidade),\n            unidade: insumo.unidade,\n            categoria: \"\"\n        };\n    }\n}\n\nreturn [\n    {\n        json: estoque\n    }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1136,
+        1888
+      ],
+      "id": "a0ff7bbd-950e-4311-a441-97e8f3acecd4",
+      "name": "c_menu_modelar_dados1",
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"code\": 500,\n  \"message\": \"Erro interno do serviço\"\n}",
+        "options": {
+          "responseCode": 500
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1696,
+        1904
+      ],
+      "id": "4efd36a4-f30a-4fac-8c0a-3eb634627ca7",
+      "name": "rwh_menu_erro_code1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "wh_menu": {
+      "main": [
+        [
+          {
+            "node": "c_menu_validacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "c_menu_validacoes": {
+      "main": [
+        [
+          {
+            "node": "If_menu_status_200",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_menu_erro_validacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "c_health_validacoes": {
+      "main": [
+        [
+          {
+            "node": "if_health_status_200",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_health_erro_validacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_health_status_200": {
+      "main": [
+        [
+          {
+            "node": "r_health",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_health_erro_header",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If_menu_status_200": {
+      "main": [
+        [
+          {
+            "node": "pg_menu_buscar_pizza",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_menu_erro_header",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wh_health": {
+      "main": [
+        [
+          {
+            "node": "c_health_validacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wh_health_post": {
+      "main": [
+        [
+          {
+            "node": "c_health_post_validacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "c_health_post_validacoes": {
+      "main": [
+        [
+          {
+            "node": "if_health_post_status_200",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_health_post_erro_validacoes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "r_health_post": {
+      "main": [
+        [
+          {
+            "node": "If_health_post_true",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_health_post_erro_redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_health_post_status_200": {
+      "main": [
+        [
+          {
+            "node": "r_health_post",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_health_post_erro_header",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "r_health": {
+      "main": [
+        [
+          {
+            "node": "if_health_true",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_health_erro_redis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If_health_post_true": {
+      "main": [
+        [
+          {
+            "node": "rwh_health_post_true",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "r_health_post_recovery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "r_health_post_recovery": {
+      "main": [
+        [
+          {
+            "node": "rwh_health_post_false",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_health_post_erro_recovery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rwh_health_post_true": {
+      "main": [
+        []
+      ]
+    },
+    "r_st_health": {
+      "main": [
+        [
+          {
+            "node": "if_st_health_true",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "st_health_recovery": {
+      "main": [
+        [
+          {
+            "node": "r_st_health",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_st_health_true": {
+      "main": [
+        [
+          {
+            "node": "r_st_health_recovery",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "r_st_health_recovery": {
+      "main": [
+        [
+          {
+            "node": "if_st_health_recovery_empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_st_health_recovery_empty": {
+      "main": [
+        [
+          {
+            "node": "r_st_health_true",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_health_true": {
+      "main": [
+        [
+          {
+            "node": "rwh_health_true",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_health_false",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "c_menu_modelar_retorno_estoque": {
+      "main": [
+        [
+          {
+            "node": "pg_menu_salvar_cache",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pg_menu_salvar_cache": {
+      "main": [
+        [
+          {
+            "node": "c_menu_retornar_ingredientes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "http_menu_estoque": {
+      "main": [
+        [
+          {
+            "node": "c_menu_modelar_retorno_estoque",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "pg_menu_buscar_cache",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pg_menu_buscar_pizza": {
+      "main": [
+        [
+          {
+            "node": "http_menu_estoque",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "c_menu_formatar_cardapio": {
+      "main": [
+        [
+          {
+            "node": "rwh_menu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pg_menu_buscar_cache": {
+      "main": [
+        [
+          {
+            "node": "if_menu_cache_valido",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_menu_erro_servico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "if_menu_cache_valido": {
+      "main": [
+        [
+          {
+            "node": "c_menu_modelar_cache",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_menu_erro_servico",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "c_menu_modelar_cache": {
+      "main": [
+        [
+          {
+            "node": "c_menu_formatar_cardapio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "c_menu_retornar_ingredientes": {
+      "main": [
+        [
+          {
+            "node": "c_menu_formatar_cardapio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "rwh_menu_erro_header": {
+      "main": [
+        []
+      ]
+    },
+    "c_menu_validacoes1": {
+      "main": [
+        [
+          {
+            "node": "If_menu_status_",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_menu_erro_validacoes1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If_menu_status_": {
+      "main": [
+        [
+          {
+            "node": "pg_menu_buscar_pizza1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_menu_erro_header1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "http_menu_estoque1": {
+      "main": [
+        [
+          {
+            "node": "c_menu_formatar_cardapio1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "http_menu_estoque2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "pg_menu_buscar_pizza1": {
+      "main": [
+        [
+          {
+            "node": "http_menu_estoque1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "c_menu_formatar_cardapio1": {
+      "main": [
+        [
+          {
+            "node": "rwh_menu1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_menu_erro_code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "wh_menu1": {
+      "main": [
+        [
+          {
+            "node": "c_menu_validacoes1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "http_menu_estoque2": {
+      "main": [
+        [
+          {
+            "node": "c_menu_modelar_dados1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_menu_erro_servico1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "c_menu_modelar_dados1": {
+      "main": [
+        [
+          {
+            "node": "c_menu_formatar_cardapio1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "rwh_menu_erro_code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "72779360-006b-450e-945d-fdd5a60cc16d",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8a5832cfccebf1f6e4152d67714b8a9e39672100660b3961e0850a37e9a65b24"
+  },
+  "nodeGroups": [],
+  "id": "ObupD1SyBF1jWMdL",
+  "tags": []
+}
